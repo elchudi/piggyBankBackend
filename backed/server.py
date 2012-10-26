@@ -48,6 +48,30 @@ def get_account():
     account = get_account(account_number)   
     return ORMEncoder().encode(account)
 
+@get('/update_account_amount')
+def update_account_amount():
+    account_number =  request.params.get('account_number')
+    amount = request.params.get('amount')
+    return str(account_amount_update(account_number, amount))
+
+@get('/add_user_to_account')
+def add_user_to_account_get():
+    telephone = request.params.get('telephone')
+    account_number = request.params.get('account_number')
+    return str(add_user_to_account(account_number, telephone))
+
+
+@get('/add_user')
+def add_user()   
+    telephone = request.params.get('telephone')
+    token = request.params.get('token')
+    session = orm.get_orm_session()
+    user = orm.User(telephone, token)
+    session.add_all([user])
+    session.commit()
+    session.bind.dispose()
+    return "OK"
+    
 class ORMEncoder(JSONEncoder):
     def default(self, o):
         dic = o.__dict__
