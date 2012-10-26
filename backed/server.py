@@ -1,8 +1,6 @@
 from bottle import route, run, get, request, post
-import zone
 import os
 import json
-import video
 import orm
 from json import JSONEncoder
 
