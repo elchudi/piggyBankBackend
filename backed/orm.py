@@ -34,34 +34,37 @@ class Account(Base):
     id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
     account_number = Column(Integer)
     amount = Column(Float)
+    amount_needed = Column(Float)
 
-    def __init__(self, id, account_number, amount=0):
+    def __init__(self, id, account_number,  amount_needed, amount=0):
         self.account_number = account_number
         self.amount = amount
         self.id = id
+        self.amount_needed = amount_needed
 
     def __repr__(self):
         #print self.zone_geom 
         #print dir(self.zone_geom)
         #for i in self.zone_geom.coords:
         #    print i
-        return "<Account('%d','%d','%s')>" % (self.id, self.account_number, self.amount)
+        return "Account('%d','%d','%s')" % (self.id, self.account_number, self.amount)
 #print User.__table__
 
-class Shared_account(Base):
+class SharedAccount(Base):
     __tablename__ = 'shared_account'
     
     id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
     account_id = Column(Integer, ForeignKey('accounts.id'), nullable=False  )
-    tel = Column(Integer)
+    telephone = Column(Integer)
+    
 
     def __init__(self, id, account_id, tel):
         self.id = id
         self.account_id = account_id
-        self.tel = tel
+        self.telephone = tel
 
     def __repr__(self):
-        return "<SharedAccount('%d','%d','%d')>" % (self.id, self.account_id, self.tel)
+        return "<SharedAccount('%d','%d','%d')>" % (self.id, self.account_id, self.telephone)
 
 Base.metadata.create_all(engine) 
 
@@ -69,4 +72,10 @@ Base.metadata.create_all(engine)
 
 #print zone1
 
-print engine.execute("select * from accounts").scalar()
+accounts =  engine.execute("select * from accounts")
+for row in accounts:
+    print row
+accounts =  engine.execute("select * from shared_account")
+for row in accounts:
+    print row
+
