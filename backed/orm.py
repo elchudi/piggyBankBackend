@@ -28,25 +28,43 @@ def get_orm_session():
     session = sessionmaker(bind=engine)()
     return session 
 
+class User(Base):
+    __tablename__ = 'users'
+    
+    id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
+    telephone = Column(String)
+    token_push = Column(String)
+    
+    def __init__(self, telephone, token_push):
+        self.telephone = telephone
+        self.token_push = token_push
+
 class Account(Base):
     __tablename__ = 'accounts'
     
     id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
-    account_number = Column(Integer)
+    account_number = Column(String)
     amount = Column(Float)
     amount_needed = Column(Float)
+    name = Column(String)
+    date = Column(DateTime)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    
 
-    def __init__(self, account_number,  amount_needed, amount=0):
+    def __init__(self, account_number,  amount_needed, name, date, user_id, amount=0):
         self.account_number = account_number
         self.amount = amount
         self.amount_needed = amount_needed
+        self.name = name
+        self.date = date
+        self.user_id = user_id
 
     def __repr__(self):
         #print self.zone_geom 
         #print dir(self.zone_geom)
         #for i in self.zone_geom.coords:
         #    print i
-        return "Account('%d','%d','%s')" % (self.id, self.account_number, self.amount)
+        return "Account('%d','%s','%s')" % (self.id, self.account_number, self.amount)
 #print User.__table__
 
 class SharedAccount(Base):
@@ -54,15 +72,15 @@ class SharedAccount(Base):
     
     id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
     account_id = Column(Integer, ForeignKey('accounts.id'), nullable=False  )
-    telephone = Column(Integer)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False  )
     
 
-    def __init__(self, account_id, tel):
+    def __init__(self, account_id, user_id):
         self.account_id = account_id
-        self.telephone = tel
+        self.user_id = user_id
 
     def __repr__(self):
-        return "<SharedAccount('%d','%d','%d')>" % (self.id, self.account_id, self.telephone)
+        return "<SharedAccount('%d','%d','%d')>" % (self.id, self.account_id, self.user_id)
 
 Base.metadata.create_all(engine) 
 

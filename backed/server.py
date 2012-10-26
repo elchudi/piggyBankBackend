@@ -95,11 +95,14 @@ def get_account_id_from_account_number(account_number):
 def get_accounts_for_tel(telephone):
     print "get_account from tel"
     session = orm.get_orm_session()
+    accounts = session.query(orm.Account).join(orm.SharedAccount).join(orm.User).filter(orm.User.telephone==telephone).all()
+    """
     account_ids = session.query(orm.SharedAccount.account_id).filter_by(telephone=telephone).all()
     print "accounts_ids", account_ids
     if not account_ids:
         return None
     accounts = session.query(orm.Account).filter(orm.Account.id.in_([x[0] for x in account_ids])).all()
+    """
     session.bind.dispose()
     print accounts
     to_ret = []
@@ -109,10 +112,13 @@ def get_accounts_for_tel(telephone):
    
 def get_tel_for_account(account_number):
     session = orm.get_orm_session()
+    telephones = session.query(orm.User.telephone).join(orm.Account).filter(orm.Account.account_number==account_number).all()
+    """
     account_id = get_account_id_from_account_number(account_number)
     if not account_id:
         return None
     telephones = session.query(orm.SharedAccount.telephone).filter_by(account_id=account_id).all()
+    """
     session.bind.dispose()
     print telephones
     to_ret = []
@@ -121,16 +127,28 @@ def get_tel_for_account(account_number):
     print to_ret
     return to_ret
 
-def add_tel_to_account(account_number, telephone):
+def get_user_for_tel(telephone):
+    session = orm.get_orm_session()
+    users = session.query(orm.User).filter_by(telephone=telephone).all()
+    session.bind.dispose()
+    if users:
+        return users
+    return None
+
+def add_user_to_account(account_number, telephone):
     #TODO check that there is no duplication of rows
     account_id =  get_account_id_from_account_number(account_number)
-    shared_account =  orm.SharedAccount(account_id, telephone)
-    session = orm.get_orm_session()
-    session.add_all([shared_account])
-    session.commit()
+    users = get_user_for_tel(telephone)
+    if users:
+        print "adding", users
+        shared_account =  orm.SharedAccount(account_id, users[0].id)
+        session = orm.get_orm_session()
+        session.add_all([shared_account])
+        session.commit()
+        session.bind.dispose()
+        return True
     session.bind.dispose()
-    return True
-         
+    return False 
  
 if __name__ == "__main__":
     run(host='0.0.0.0', port=8080)
