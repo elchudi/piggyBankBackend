@@ -9,6 +9,11 @@ from sqlalchemy.ext.declarative import declarative_base
 engine = create_engine('sqlite:///piggy.db', echo=False)
 session = sessionmaker(bind=engine)()
 
-acc1 = orm.Account(1,5000,345)
-session.add_all([acc1])
+acc1 = orm.Account(1, 5000, 64, 1000)
+acc2 = orm.Account(2, 7000, 128, 10000)
+
+shared1 = orm.SharedAccount(1,1,666666666)
+shared2 = orm.SharedAccount(2,1,666666555)
+
+session.add_all([acc1, acc2, shared1, shared2])
 session.commit()
