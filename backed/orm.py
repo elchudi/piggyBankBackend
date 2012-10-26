@@ -36,10 +36,9 @@ class Account(Base):
     amount = Column(Float)
     amount_needed = Column(Float)
 
-    def __init__(self, id, account_number,  amount_needed, amount=0):
+    def __init__(self, account_number,  amount_needed, amount=0):
         self.account_number = account_number
         self.amount = amount
-        self.id = id
         self.amount_needed = amount_needed
 
     def __repr__(self):
@@ -58,8 +57,7 @@ class SharedAccount(Base):
     telephone = Column(Integer)
     
 
-    def __init__(self, id, account_id, tel):
-        self.id = id
+    def __init__(self, account_id, tel):
         self.account_id = account_id
         self.telephone = tel
 
