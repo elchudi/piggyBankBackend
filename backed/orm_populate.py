@@ -7,7 +7,6 @@ from sqlalchemy.ext.declarative import declarative_base
 
 #engine = create_engine('sqlite:///:memory:', echo=False)
 engine = create_engine('sqlite:///piggy.db', echo=False)
-session = sessionmaker(bind=engine)()
 
 user1 = orm.User("666666555","token_push1")
 user2 = orm.User("666666666","token_push2")
@@ -21,5 +20,6 @@ shared1 = orm.SharedAccount(1, 1)
 shared2 = orm.SharedAccount(2, 1)
 shared3 = orm.SharedAccount(1, 2)
 
+session = sessionmaker(bind=engine)()
 session.add_all([user1, user2, acc1, acc2, acc3, shared1, shared2, shared3])
 session.commit()
