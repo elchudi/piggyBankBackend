@@ -42,29 +42,42 @@ def accounts_for_telephone():
         to_ret += encoded
     return to_ret
 
+@get('/my_accounts')
+def my_accounts_get():
+    telephone = request.params.get('telephone')
+    accounts =  my_accounts(telephone)
+    print accounts
+    to_ret = ""
+    for a in accounts:
+        encoded = ORMEncoder().encode(a)
+        print encoded
+        #print json.dumps(a.__dict__, skipkeys=True)
+        to_ret += encoded
+    return to_ret
+
 @get('/get_account')
 def get_account():
     account_number = request.params.get('account_number') 
     account = get_account(account_number)   
     return ORMEncoder().encode(account)
 
-@get('/update_account_amount')
+@post('/update_account_amount')
 def update_account_amount():
-    account_number =  request.params.get('account_number')
-    amount = request.params.get('amount')
+    account_number =  request.forms.get('account_number')
+    amount = request.forms.get('amount')
     return str(account_amount_update(account_number, amount))
 
-@get('/add_user_to_account')
+@post('/add_user_to_account')
 def add_user_to_account_get():
-    telephone = request.params.get('telephone')
-    account_number = request.params.get('account_number')
+    telephone = request.forms.get('telephone')
+    account_number = request.forms.get('account_number')
     return str(add_user_to_account(account_number, telephone))
 
 
-@get('/add_user')
-def add_user()   
-    telephone = request.params.get('telephone')
-    token = request.params.get('token')
+@post('/add_user')
+def add_user():
+    telephone = request.forms.get('telephone')
+    token = request.forms.get('token')
     session = orm.get_orm_session()
     user = orm.User(telephone, token)
     session.add_all([user])
@@ -132,6 +145,12 @@ def get_accounts_for_tel(telephone):
         to_ret.append(acc)
     return to_ret
    
+def my_accounts(telephone):
+    accounts = session.query(orm.Account).join(orm.User).filter(orm.User.telephone==telephone).all()
+    if accounts:
+        return accounts 
+    return None
+
 def get_tel_for_account(account_number):
     session = orm.get_orm_session()
     telephones = session.query(orm.User.telephone).join(orm.Account).filter(orm.Account.account_number==account_number).all()
