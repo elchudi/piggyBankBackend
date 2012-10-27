@@ -22,5 +22,5 @@ shared2 = orm.SharedAccount(2, 1)
 shared3 = orm.SharedAccount(1, 2)
 
 session = sessionmaker(bind=engine)()
-session.add_all([user1, user2, acc1, acc2, acc3, shared1, shared2, shared3])
+session.add_all([user1, user2, acc1, acc2, acc3, acc4, shared1, shared2, shared3])
 session.commit()
