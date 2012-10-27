@@ -63,7 +63,7 @@ def get_account():
 
 @post('/update_account_amount')
 def update_account_amount():
-    account_number =  request.forms.get('account_number')
+    account_number =  request.json[forms.get('account_number')
     amount = request.forms.get('amount')
     return str(account_amount_update(account_number, amount))
 
@@ -76,13 +76,17 @@ def add_user_to_account_get():
 
 @post('/add_user')
 def add_user():
-    telephone = request.forms.get('telephone')
-    token = request.forms.get('token')
+    print "adding user"
+    print request.json
+    print dir(request.json)
+    telephone = request.json['telephone']
+    token = request.json['token']
     session = orm.get_orm_session()
     user = orm.User(telephone, token)
     session.add_all([user])
     session.commit()
     session.bind.dispose()
+    print "useradde ", telephone, token
     return "OK"
     
 class ORMEncoder(JSONEncoder):
