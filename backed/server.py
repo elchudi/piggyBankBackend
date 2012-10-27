@@ -45,14 +45,28 @@ def accounts_for_telephone():
 @post('/my_accounts')
 def my_accounts_get():
     telephone = request.json['telephone']
+    print telephone
     accounts =  my_accounts(telephone)
     print accounts
-    to_ret = ""
+    to_ret = '{"piggy":['
     for a in accounts:
+        telephones = get_tel_for_account(a.account_number)
         encoded = ORMEncoder().encode(a)
+        encoded = encoded[:-1]
+        encoded += ',"telephones":['
+        for t in telephones :
+            encoded += '{"telephone":'
+            encoded += t
+            encoded += '},'
+        encoded = encoded[:-1]
+        encoded += ']}'
         print encoded
         #print json.dumps(a.__dict__, skipkeys=True)
         to_ret += encoded
+        to_ret += ","
+    to_ret = to_ret[:-1]
+    to_ret += ']}'
+    print to_ret
     return to_ret
 
 @get('/get_account')
@@ -173,6 +187,7 @@ def get_accounts_for_tel(telephone):
 def my_accounts(telephone):
     session = orm.get_orm_session()
     accounts = session.query(orm.Account).join(orm.User).filter(orm.User.telephone==telephone).all()
+    print "accounts", accounts
     session.bind.dispose()
     if accounts:
         return accounts 
