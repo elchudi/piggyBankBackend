@@ -38,6 +38,9 @@ class User(Base):
     def __init__(self, telephone, token_push):
         self.telephone = telephone
         self.token_push = token_push
+    
+    def __repr__(self):
+        return "<User(id is'%s,'tel is '%s', token is '%s', )>" % (self.id, self.telephone, self.token_push)
 
 class Account(Base):
     __tablename__ = 'accounts'
@@ -64,7 +67,7 @@ class Account(Base):
         #print dir(self.zone_geom)
         #for i in self.zone_geom.coords:
         #    print i
-        return "Account('%d','%s','%s')" % (self.id, self.account_number, self.amount)
+        return "Account(id is '%d', acc_num'%s', amount is '%s')" % (self.id, self.account_number, self.amount)
 #print User.__table__
 
 class SharedAccount(Base):
@@ -80,7 +83,7 @@ class SharedAccount(Base):
         self.user_id = user_id
 
     def __repr__(self):
-        return "<SharedAccount('%d','%d','%d')>" % (self.id, self.account_id, self.user_id)
+        return "<SharedAccount(id is '%d', acc_id is '%d', user id is '%d')>" % (self.id, self.account_id, self.user_id)
 
 Base.metadata.create_all(engine) 
 
