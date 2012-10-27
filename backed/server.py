@@ -34,12 +34,25 @@ def accounts_for_telephone():
     telephone = request.params.get('telephone')
     accounts =  get_accounts_for_tel(telephone)
     print accounts
-    to_ret = ""
+    to_ret = '{"piggy":['
     for a in accounts:
+        telephones = get_tel_for_account(a.account_number)
         encoded = ORMEncoder().encode(a)
+        encoded = encoded[:-1]
+        encoded += ',"telephones":['
+        for t in telephones :
+            encoded += '{"telephone":'
+            encoded += t
+            encoded += '},'
+        encoded = encoded[:-1]
+        encoded += ']}'
         print encoded
         #print json.dumps(a.__dict__, skipkeys=True)
         to_ret += encoded
+        to_ret += ","
+    to_ret = to_ret[:-1]
+    to_ret += ']}'
+    print to_ret
     return to_ret
 
 @post('/my_accounts')
@@ -81,7 +94,7 @@ def update_account_amount():
     amount = request.json['amount']
     return str(account_amount_update(account_number, amount))
 
-@post('/add_user_to_account')
+@post('/add_users_to_account')
 def add_user_to_account_get():
     telephone = request.json['telephone']
     account_number = request.json['account_number']
