@@ -102,7 +102,7 @@ def add_account():
     
     session = orm.get_orm_session()
     user_id = get_user_for_tel(telephone)[0].id
-    acc = orm.Account( account_number,  amount_needed, name, None, user_id, amount):
+    acc = orm.Account( account_number,  amount_needed, name, None, user_id, amount)
     session.add_all([acc])
     session.commit()
     session.bind.dispose()
