@@ -42,9 +42,9 @@ def accounts_for_telephone():
         to_ret += encoded
     return to_ret
 
-@get('/my_accounts')
+@post('/my_accounts')
 def my_accounts_get():
-    telephone = request.params.get('telephone')
+    telephone = request.json['telephone']
     accounts =  my_accounts(telephone)
     print accounts
     to_ret = ""
@@ -89,6 +89,27 @@ def add_user():
     print "useradde ", telephone, token
     return "OK"
     
+@post('/add_account')
+def add_account():
+    print "adding account"
+    print request.json
+    print dir(request.json)
+    telephone = request.json['telephone']
+    name = request.json['name']
+    amount = request.json['amount']
+    amount_nedded = request.json['amount_nedded']
+    account_number = request.json['account_number']
+    
+    session = orm.get_orm_session()
+    user_id = get_user_for_tel(telephone)[0].id
+    acc = orm.Account( account_number,  amount_needed, name, None, user_id, amount):
+    session.add_all([acc])
+    session.commit()
+    session.bind.dispose()
+    print "account added ", telephone, account_number
+    return "OK"
+
+
 class ORMEncoder(JSONEncoder):
     def default(self, o):
         dic = o.__dict__
