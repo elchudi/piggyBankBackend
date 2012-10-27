@@ -150,7 +150,9 @@ def get_accounts_for_tel(telephone):
     return to_ret
    
 def my_accounts(telephone):
+    session = orm.get_orm_session()
     accounts = session.query(orm.Account).join(orm.User).filter(orm.User.telephone==telephone).all()
+    session.bind.dispose()
     if accounts:
         return accounts 
     return None
