@@ -15,6 +15,7 @@ user2 = orm.User("666666666","token_push2")
 acc1 = orm.Account(5000, 64, "cerdo 1", None, 1, 10)
 acc2 = orm.Account(7000, 128, "cerdo 2", None, 1, 10)
 acc3 = orm.Account(8000, 256, "cerdo 3", None, 1, 10)
+acc4 = orm.Account(9000, 256, "cerdo 4", None, 2, 10)
 
 shared1 = orm.SharedAccount(1, 1)
 shared2 = orm.SharedAccount(2, 1)
