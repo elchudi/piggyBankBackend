@@ -63,14 +63,14 @@ def get_account():
 
 @post('/update_account_amount')
 def update_account_amount():
-    account_number =  request.json[forms.get('account_number')
-    amount = request.forms.get('amount')
+    account_number =  request.json['account_number']
+    amount = request.json['amount']
     return str(account_amount_update(account_number, amount))
 
 @post('/add_user_to_account')
 def add_user_to_account_get():
-    telephone = request.forms.get('telephone')
-    account_number = request.forms.get('account_number')
+    telephone = request.json['telephone']
+    account_number = request.json['account_number']
     return str(add_user_to_account(account_number, telephone))
 
 
